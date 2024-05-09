@@ -7,7 +7,7 @@ nbs/profile_snapshots
 nbs/tmp-*
 data/
 sbatch_outputs/
-
+models/
 # python ignores
 __pycache__/
 *.pyc
