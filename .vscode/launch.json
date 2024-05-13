@@ -5,11 +5,80 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
+            "name": "Train",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
+            "program": "train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "2"
+            },
+            "args": [
+                "--train_type",
+                "bnb_dora",
+                "--model_name",
+                "meta-llama/Meta-Llama-3-8B",
+                "--dataset",
+                "orca_math",
+                "--dataset_samples",
+                10000,
+                "--batch_size",
+                "1",
+                "--context_length",
+                "2048",
+                "--gradient_accumulation_steps",
+                "2",
+                "--sharding_strategy",
+                "full_shard",
+                "--use_gradient_checkpointing",
+                "true",
+                "--reentrant_checkpointing",
+                "true",
+                "--lora_rank",
+                "8",
+                "--use_cpu_offload",
+                "false",
+                "--use_activation_cpu_offload",
+                "false",
+                "--project_name",
+                "fsdp-quantized-ft-exps",
+                "--save_model",
+                "true",
+                "--output_dir",
+                "models/save_thu",
+                "--log_to",
+                "wandb",
+            ]
+        },
+        {
+            "name": "Eval",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "inteference_only.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "2"
+            },
+            "args": [
+                "--model_name",
+                "meta-llama/Meta-Llama-3-8B",
+                "--dataset",
+                "orca_math",
+                "--dataset_samples",
+                "10000",
+                "--batch_size",
+                "1",
+                "--context_length",
+                "2048",
+                "--sharding_strategy",
+                "full_shard",
+                "--use_gradient_checkpointing",
+                "true",
+                "--reentrant_checkpointing",
+                "true"
+            ]
         }
     ]
 }
