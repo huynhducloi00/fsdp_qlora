@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-gpu=12
 #SBATCH --job-name=fsdp-multi-node-test
 #SBATCH --output=sbatch_outputs/%x_%j.out
-
+export SLURM_GPUS_PER_NODE=2
 ##### Number of total processes 
 echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX "
 echo "Nodelist:= " $SLURM_JOB_NODELIST
@@ -30,10 +30,8 @@ echo "Starting python script"
 
 
 # run setup script to init environment
-module load cuda/11.8
-
-SHARED_VOLUME_DIR=/weka/home-$(whoami)
-source $SHARED_VOLUME_DIR/py_venvs/fsdp-qlora-py311/bin/activate
+SHARED_VOLUME_DIR=/home/$(whoami)
+# source $SHARED_VOLUME_DIR/py_venvs/fsdp-qlora-py311/bin/activate
 
 # nccl
 export FI_EFA_FORK_SAFE=1
@@ -65,7 +63,7 @@ echo "CUDA_HOME=$CUDA_HOME"
 MAX_BATCH_SIZE=8
 GRAD_ACCUM_STEPS=1
 
-srun python $SHARED_VOLUME_DIR/git/fsdp_qlora/train.py \
+srun python train.py \
 --world_size=$WORLD_SIZE \
 --master_addr=$MASTER_ADDR \
 --master_port=$MASTER_PORT \
@@ -79,4 +77,5 @@ srun python $SHARED_VOLUME_DIR/git/fsdp_qlora/train.py \
 --use_activation_cpu_offload True \
 --use_cpu_offload False \
 --log_to stdout \
+--precision fp16_autocast \
 --verbose true
